@@ -25,6 +25,22 @@ async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
+
+        const toyCollection = client.db('eduPlayEmporium').collection('toys')
+
+
+        // New Toys Add
+        app.post('/toys', async(req, res) =>{
+            const newToy = req.body;
+            const result = await toyCollection.insertOne(newToy)
+            res.send(result)
+        })
+
+        // get toy data
+        app.get('/toys', async(req, res) =>{
+            const result = await toyCollection.find().toArray()
+            res.send(result)
+        })
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
