@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
 const port = process.env.PORT || 5000;
 
@@ -24,7 +24,7 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        client.connect();
 
         const toyCollection = client.db('eduPlayEmporium').collection('toys')
 
@@ -39,6 +39,14 @@ async function run() {
         // get toy data
         app.get('/toys', async(req, res) =>{
             const result = await toyCollection.find().toArray()
+            res.send(result)
+        })
+
+        // get a toy by id
+        app.get('/toys/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: new ObjectId(id)}
+            const result = await toyCollection.findOne(query)
             res.send(result)
         })
         // Send a ping to confirm a successful connection
