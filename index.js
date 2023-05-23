@@ -27,6 +27,7 @@ async function run() {
         client.connect();
 
         const toyCollection = client.db('eduPlayEmporium').collection('toys')
+        const woodenToyCollection = client.db('eduPlayEmporium').collection('wooden-toys')
 
 
         // New Toys Add
@@ -57,6 +58,12 @@ async function run() {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await toyCollection.findOne(query)
+            res.send(result)
+        })
+
+        // get data from wooden toy collection
+        app.get('/wooden-toys', async(req,res) => {
+            const result = await woodenToyCollection.find().toArray()
             res.send(result)
         })
 
